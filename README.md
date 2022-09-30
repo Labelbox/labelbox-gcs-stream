@@ -5,7 +5,8 @@ This repo will provide you the core capabilities required to stream a Google Buc
 Prerequisites:
 1. Set up Delegated Access to Labelbox, and ensure that the default setting is to the target bucket.
     * See how here: https://docs.labelbox.com/docs/using-google-cloud-storage 
-2. Only files supported by Labelbox will be uploaded - please see here for the latest: https://docs.labelbox.com/docs/supported-data-types
+2. Only files supported by Labelbox will be uploaded
+    * See latest supported data types here: https://docs.labelbox.com/docs/supported-data-types
 3. The Google account performing these steps has access to the Google bucket and permissions to create Lambda functions
 4. The Labelbox account performing these steps has Admin-level permissions in a Labelbox organization
 
