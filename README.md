@@ -24,7 +24,7 @@ gcloud config set functions/region "us-east1"
 3. Create / Redeploy your GCS function from GitHub:
     * The  example functions in this notebook's main.py file are:
         * **stream_data_rows** - This will create a data row every time a new asset is uploaded to the bucket
-        * **update_metadata** - This will update metadata any time object metadata is modified in GCS
+        * **update_metadata** - This will update Labelbox Metadata any time an object's metadata is modified in GCS
 
 4. Example using this repo:
 
