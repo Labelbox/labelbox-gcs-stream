@@ -32,10 +32,12 @@ def stream_data_rows(event, context):
     url = f"gs://{bucket_name}/{object_name}"
 
     try:
-        dataset.create_data_row(row_data=url, global_key=object_name)
+        data_row = dataset.create_data_row(row_data=url, global_key=object_name)
+        print(f'Created Data Row with ID {data_row.uid} and Global Key {object_name}')
     except:
         print(f'Data Row with Global Key "{object_name}" already exists. Creating a Data Row with GCS Object ID "{object_id}"')
-        dataset.create_data_row(row_data=url, global_key=object_id)
+        data_row = dataset.create_data_row(row_data=url, global_key=object_id)
+        print(f'Created Data Row with ID {data_row.uid} and Global Key {object_id}')
 
     return True
 
