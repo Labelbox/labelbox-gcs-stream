@@ -25,6 +25,7 @@ gcloud config set functions/region "us-east1"
     * The  example functions in this notebook's main.py file are:
         * **stream_data_rows** - This will create a data row every time a new asset is uploaded to the bucket
         * **update_metadata** - This will update Labelbox Metadata any time an object's metadata is modified in GCS
+    * Running ```gcloud functions deploy FUNCTION_NAME``` will create a google cloud function of said name or update an exsting one
 
 4. Example using this repo:
 
