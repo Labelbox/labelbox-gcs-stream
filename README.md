@@ -1,6 +1,6 @@
-Data Streaming with GCS using Google Cloud Functions
+# Data Streaming with GCS using Google Cloud Functions
 
-This repo will provide you the core capabilities required to stream a Google Bucket into Labelbox.
+## This repo will provide you the core capabilities required to stream a Google Bucket into Labelbox.
 
 Prerequisites:
 1. Set up Delegated Access to Labelbox, and ensure that the default setting is to the target bucket.
