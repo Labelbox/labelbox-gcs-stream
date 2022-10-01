@@ -73,10 +73,15 @@ def update_metadata(event, context):
                 mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[metadata_field_name][enum_option].uid, "parent_schema_id" : metadata_dict[metadata_field_name][enum_option].parent}})
         else:
           mdo_index.update({str(metadata_field_name):{"schema_id" : metadata_dict[metadata_field_name].uid}})     
+    
+    print(object_metadata)
+    print(mdo_index)
 
     # Create your list of Labelbox Metadata Fields to upload
     labelbox_metadata = []
     for metadata_field_name in object_metadata.keys():
+        print(mdo_index[metadata_field_name]['schema_id'])
+        print(object_metadata[metadata_field_name])
         labelbox_metadata.append(
             DataRowMetadataField(
                 schema_id=mdo_index[metadata_field_name]['schema_id'], 
