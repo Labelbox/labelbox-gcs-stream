@@ -79,7 +79,7 @@ def update_metadata(event, context):
     for metadata_field_name in object_metadata.keys():
         labelbox_metadata.append(
             DataRowMetadataField(
-                schema_id=mdo_index[metadata_field_name], 
+                schema_id=mdo_index[metadata_field_name]['schema_id'], 
                 value=object_metadata[metadata_field_name]
             )
         )
