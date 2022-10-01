@@ -61,6 +61,7 @@ def update_metadata(event, context):
             mdo.create_schema(name=metadata_field_name, kind=DataRowMetadataKind.string)
             mdo = client.get_data_row_metadata_ontology()
             lb_metadata_names = [field['name'] for field in mdo._get_ontology()]    
+    print(f'lb_metadata_names')
 
     # Create a dictionary where {key=metadata_field_name : value=metadata_schema_id}
     metadata_dict = mdo.reserved_by_name
@@ -73,11 +74,12 @@ def update_metadata(event, context):
                 mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[metadata_field_name][enum_option].uid, "parent_schema_id" : metadata_dict[metadata_field_name][enum_option].parent}})
         else:
           mdo_index.update({str(metadata_field_name):{"schema_id" : metadata_dict[metadata_field_name].uid}})     
+    print(f'mdo_index')
 
     # Create your list of Labelbox Metadata Fields to upload
-    labelbox_metadta = []
+    labelbox_metadata = []
     for metadata_field_name in object_metadata.keys():
-        labelbox_metadta.append(
+        labelbox_metadata.append(
             DataRowMetadataField(
                 schema_id=mdo_index[metadata_field_name], 
                 value=object_metadata[metadata_field_name]
@@ -91,7 +93,7 @@ def update_metadata(event, context):
         mdo.bulk_upsert([
             DataRowMetadata(
                 data_row_id = data_row.uid,
-                fiels = labelbox_metadta
+                fiels = labelbox_metadata
             )
         ])
     except:
