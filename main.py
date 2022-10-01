@@ -50,7 +50,7 @@ def update_metadata(event, context):
     bucket_name = event['bucket']
     object_id = event['id']
     object_name = event['name']
-    object_metadata = context['metadata']
+    object_metadata = event['metadata']
 
     mdo = client.get_data_row_metadata_ontology()
     lb_metadata_names = [field['name'] for field in mdo._get_ontology()]
