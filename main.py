@@ -50,13 +50,12 @@ def update_metadata(event, context):
     bucket_name = event['bucket']
     object_id = event['id']
     object_name = event['name']
-    object_metadata = event['metadata']
-
+    gcs_metadata = event['metadata']
+    
     mdo = client.get_data_row_metadata_ontology()
     lb_metadata_names = [field['name'] for field in mdo._get_ontology()]
-
     # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata 
-    for metadata_field_name in object_metadata.keys():
+    for metadata_field_name in gcs_metadata.keys():
         if metadata_field_name not in lb_metadata_names:
             mdo.create_schema(name=metadata_field_name, kind=DataRowMetadataKind.string)
             mdo = client.get_data_row_metadata_ontology()
@@ -66,29 +65,29 @@ def update_metadata(event, context):
     metadata_dict = mdo.reserved_by_name
     metadata_dict.update(mdo.custom_by_name)
     mdo_index = {}
-    for metadata_field_name in metadata_dict:
-        if type(metadata_dict[metadata_field_name]) == dict:
-            mdo_index.update({str(metadata_field_name) : {"schema_id" :  list(metadata_dict[metadata_field_name].values())[0].parent}})
-            for enum_option in metadata_dict[metadata_field_name]:
-                mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[metadata_field_name][enum_option].uid, "parent_schema_id" : metadata_dict[metadata_field_name][enum_option].parent}})
+    for mdo_name in metadata_dict:
+        if type(metadata_dict[mdo_name]) == dict:
+            mdo_index.update({str(mdo_name) : {"schema_id" :  list(metadata_dict[mdo_name].values())[0].parent}})
+            for enum_option in metadata_dict[mdo_name]:
+                mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[mdo_name][enum_option].uid, "parent_schema_id" : metadata_dict[mdo_name][enum_option].parent}})
         else:
-          mdo_index.update({str(metadata_field_name):{"schema_id" : metadata_dict[metadata_field_name].uid}})     
+          mdo_index.update({str(metadata_field_name):{"schema_id" : metadata_dict[mdo_name].uid}})     
     
-    print(object_metadata)
-    print(mdo_index)
+    
+    print(f'mdo_index: {mdo_index}')
+    print(f'Iterating through object_metadata: {object_metadata}')
 
     # Create your list of Labelbox Metadata Fields to upload
     labelbox_metadata = []
     for metadata_field_name in object_metadata.keys():
-        print(mdo_index[metadata_field_name]['schema_id'])
-        print(object_metadata[metadata_field_name])
+        print(f'Schema ID : {mdo_index[metadata_field_name]['schema_id']}')
+        print(f'Value : {object_metadata[metadata_field_name]}')
         labelbox_metadata.append(
             DataRowMetadataField(
                 schema_id=mdo_index[metadata_field_name]['schema_id'], 
                 value=object_metadata[metadata_field_name]
             )
         )
-    print(labelbox_metadata)
     
     # Update your Labelbox Data Row
     try:
