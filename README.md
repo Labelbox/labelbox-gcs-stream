@@ -30,7 +30,7 @@ gcloud config set functions/region "us-east1"
 4. Example using this repo:
 
 ```
-git clone labelbox-gcs-stream
+git clone https://github.com/Labelbox/labelbox-gcs-stream.git
 cd labelbox-gcs-stream
 GCS_BUCKET_NAME="my-bucket"
 LABELBOX_API_KEY="my-api-key"
