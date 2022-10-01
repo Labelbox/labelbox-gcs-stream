@@ -80,8 +80,8 @@ def update_metadata(event, context):
     # Create your list of Labelbox Metadata Fields to upload
     labelbox_metadata = []
     for gcs_metadata_field in gcs_metadata.keys():
-        print(f'Schema ID : {mdo_index[gcs_metadata_field]['schema_id']}')
-        print(f'Value : {gcs_metadata[gcs_metadata_field]}')
+        print(f"Schema ID : {mdo_index[gcs_metadata_field]['schema_id']}")
+        print(f"Value : {gcs_metadata[gcs_metadata_field]}")
         labelbox_metadata.append(
             DataRowMetadataField(
                 schema_id=mdo_index[gcs_metadata_field]['schema_id'], 
