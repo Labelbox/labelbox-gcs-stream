@@ -55,9 +55,9 @@ def update_metadata(event, context):
     mdo = client.get_data_row_metadata_ontology()
     lb_metadata_names = [field['name'] for field in mdo._get_ontology()]
     # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata 
-    for metadata_field_name in gcs_metadata.keys():
-        if metadata_field_name not in lb_metadata_names:
-            mdo.create_schema(name=metadata_field_name, kind=DataRowMetadataKind.string)
+    for gcs_metadata_field in gcs_metadata.keys():
+        if gcs_metadata_field not in lb_metadata_names:
+            mdo.create_schema(name=gcs_metadata_field, kind=DataRowMetadataKind.string)
             mdo = client.get_data_row_metadata_ontology()
             lb_metadata_names = [field['name'] for field in mdo._get_ontology()]    
 
@@ -71,21 +71,21 @@ def update_metadata(event, context):
             for enum_option in metadata_dict[mdo_name]:
                 mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[mdo_name][enum_option].uid, "parent_schema_id" : metadata_dict[mdo_name][enum_option].parent}})
         else:
-          mdo_index.update({str(metadata_field_name):{"schema_id" : metadata_dict[mdo_name].uid}})     
-    
+          mdo_index.update({str(mdo_name):{"schema_id" : metadata_dict[mdo_name].uid}})     
+   
     
     print(f'mdo_index: {mdo_index}')
     print(f'Iterating through object_metadata: {object_metadata}')
 
     # Create your list of Labelbox Metadata Fields to upload
     labelbox_metadata = []
-    for metadata_field_name in object_metadata.keys():
-        print(f'Schema ID : {mdo_index[metadata_field_name]['schema_id']}')
-        print(f'Value : {object_metadata[metadata_field_name]}')
+    for gcs_metadata_field in gcs_metadata.keys():
+        print(f'Schema ID : {mdo_index[gcs_metadata_field]['schema_id']}')
+        print(f'Value : {gcs_metadata[gcs_metadata_field]}')
         labelbox_metadata.append(
             DataRowMetadataField(
-                schema_id=mdo_index[metadata_field_name]['schema_id'], 
-                value=object_metadata[metadata_field_name]
+                schema_id=mdo_index[gcs_metadata_field]['schema_id'], 
+                value=object_metadata[gcs_metadata_field]
             )
         )
     
