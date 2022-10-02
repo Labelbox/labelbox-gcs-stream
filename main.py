@@ -95,7 +95,7 @@ def update_metadata(event, context):
         task = mdo.bulk_upsert([
             DataRowMetadata(
                 data_row_id = data_row.uid,
-                fiels = labelbox_metadata
+                fields = labelbox_metadata
             )
         ])
         print(f'Updated Data Row ID {data_row.uid}\nErrors: {task.errors}')
