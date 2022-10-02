@@ -90,11 +90,11 @@ def update_metadata(event, context):
     
     # Update your Labelbox Data Row
     try:
-        data_row = client.get_data_row_ids_for_global_keys([object_name])['results'][0]
+        data_row_id = client.get_data_row_ids_for_global_keys([object_name])['results'][0]
         mdo = client.get_data_row_metadata_ontology()
         task = mdo.bulk_upsert([
             DataRowMetadata(
-                data_row_id = data_row.uid,
+                data_row_id = data_row_id,
                 fields = labelbox_metadata
             )
         ])
@@ -102,6 +102,6 @@ def update_metadata(event, context):
     except:
         print(f'No data row with Global Key {object_name} exists')
 
-    print(f'Updated Metadata for Labelbox Data Row ID {data_row.uid} with Global Key {object_name}')
+    print(f'Updated Metadata for Labelbox Data Row ID {data_row_id} with Global Key {object_name}')
 
     return True
