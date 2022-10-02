@@ -60,6 +60,7 @@ def update_metadata(event, context):
             mdo.create_schema(name=gcs_metadata_field, kind=DataRowMetadataKind.string)
             mdo = client.get_data_row_metadata_ontology()
             lb_metadata_names = [field['name'] for field in mdo._get_ontology()]    
+    print(f'GCS Metadata: {gcs_metadata}')
 
     # Create a dictionary where {key=metadata_field_name : value=metadata_schema_id}
     metadata_dict = mdo.reserved_by_name
@@ -71,12 +72,9 @@ def update_metadata(event, context):
             for enum_option in metadata_dict[mdo_name]:
                 mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[mdo_name][enum_option].uid, "parent_schema_id" : metadata_dict[mdo_name][enum_option].parent}})
         else:
-          mdo_index.update({str(mdo_name):{"schema_id" : metadata_dict[mdo_name].uid}})     
-   
+          mdo_index.update({str(mdo_name):{"schema_id" : metadata_dict[mdo_name].uid}})
+    print(f'MDO Index {mdo_index}')     
     
-    print(f'mdo_index: {mdo_index}')
-    print(f'Iterating through object_metadata: {object_metadata}')
-
     # Create your list of Labelbox Metadata Fields to upload
     labelbox_metadata = []
     for gcs_metadata_field in gcs_metadata.keys():
@@ -88,17 +86,19 @@ def update_metadata(event, context):
                 value=object_metadata[gcs_metadata_field]
             )
         )
+    print(f'Labelbox Metadata {labelbox_metadata}')
     
     # Update your Labelbox Data Row
     try:
         data_row = client.get_data_row_ids_for_global_keys([object_name])['results'][0]
         mdo = client.get_data_row_metadata_ontology()
-        mdo.bulk_upsert([
+        task = mdo.bulk_upsert([
             DataRowMetadata(
                 data_row_id = data_row.uid,
                 fiels = labelbox_metadata
             )
         ])
+        print(f'Updated Data Row ID {data_row.uid}\nErrors: {task.errors}')
     except:
         print(f'No data row with Global Key {object_name} exists')
 
