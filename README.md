@@ -14,7 +14,7 @@ Prerequisites:
 3. The Google account performing these steps has access to the Google bucket and permissions to create Lambda functions
 4. The Labelbox account performing these steps has Admin-level permissions in a Labelbox organization
 
-Steps:
+## How to Use:
 1. Authenticate your GCloud CLI in your Terminal:
 ```
 gcloud auth login
