@@ -29,9 +29,7 @@ gcloud config set functions/region "us-east1"
     * All cloud functions are deployed from the same main.py file, only difference is in the deployment parameters and the ```entry-point``` argument provided
     * Running ```gcloud functions deploy FUNCTION_NAME``` will create a google cloud function of said name or update an exsting one
 
-4. Example using this repo:
-
-Clone Repo and Define Variables:
+4. Clone Repo and Define Variables:
 ```
 git clone https://github.com/Labelbox/labelbox-gcs-stream.git
 cd labelbox-gcs-stream
