@@ -50,43 +50,43 @@ def update_metadata(event, context):
     bucket_name = event['bucket']
     object_id = event['id']
     object_name = event['name']
-    gcs_metadata = event['metadata']
-    
-    mdo = client.get_data_row_metadata_ontology()
-    lb_metadata_names = [field['name'] for field in mdo._get_ontology()]
-    # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata 
-    for gcs_metadata_field in gcs_metadata.keys():
-        if gcs_metadata_field not in lb_metadata_names:
-            mdo.create_schema(name=gcs_metadata_field, kind=DataRowMetadataKind.string)
-            mdo = client.get_data_row_metadata_ontology()
-            lb_metadata_names = [field['name'] for field in mdo._get_ontology()]    
-    print(f'GCS Metadata: {gcs_metadata}')
-
-    # Create a dictionary where {key=metadata_field_name : value=metadata_schema_id}
-    metadata_dict = mdo.reserved_by_name
-    metadata_dict.update(mdo.custom_by_name)
-    mdo_index = {}
-    for mdo_name in metadata_dict:
-        if type(metadata_dict[mdo_name]) == dict:
-            mdo_index.update({str(mdo_name) : {"schema_id" :  list(metadata_dict[mdo_name].values())[0].parent}})
-            for enum_option in metadata_dict[mdo_name]:
-                mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[mdo_name][enum_option].uid, "parent_schema_id" : metadata_dict[mdo_name][enum_option].parent}})
-        else:
-          mdo_index.update({str(mdo_name):{"schema_id" : metadata_dict[mdo_name].uid}})
-    print(f'MDO Index {mdo_index}')     
-    
-    # Create your list of Labelbox Metadata Fields to upload
+    try:
+        gcs_metadata = event['metadata']
+    except:
+        gcs_metadata = [] # If no 'metadata', then that means metadata was deleted
     labelbox_metadata = []
-    for gcs_metadata_field in gcs_metadata.keys():
-        print(f"Schema ID : {mdo_index[gcs_metadata_field]['schema_id']}")
-        print(f"Value : {gcs_metadata[gcs_metadata_field]}")
-        labelbox_metadata.append(
-            DataRowMetadataField(
-                schema_id=mdo_index[gcs_metadata_field]['schema_id'], 
-                value=gcs_metadata[gcs_metadata_field]
+    
+    if gcs_metadata:
+        mdo = client.get_data_row_metadata_ontology()
+        lb_metadata_names = [field['name'] for field in mdo._get_ontology()]        
+        # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata 
+        for gcs_metadata_field in gcs_metadata.keys():
+            if gcs_metadata_field not in lb_metadata_names:
+                mdo.create_schema(name=gcs_metadata_field, kind=DataRowMetadataKind.string)
+                mdo = client.get_data_row_metadata_ontology()
+                lb_metadata_names = [field['name'] for field in mdo._get_ontology()]    
+        print(f'GCS Metadata: {gcs_metadata}')
+        # Create a dictionary where {key=metadata_field_name : value=metadata_schema_id}
+        metadata_dict = mdo.reserved_by_name
+        metadata_dict.update(mdo.custom_by_name)
+        mdo_index = {}
+        for mdo_name in metadata_dict:
+            if type(metadata_dict[mdo_name]) == dict:
+                mdo_index.update({str(mdo_name) : {"schema_id" :  list(metadata_dict[mdo_name].values())[0].parent}})
+                for enum_option in metadata_dict[mdo_name]:
+                    mdo_index.update({str(enum_option) : {"schema_id" : metadata_dict[mdo_name][enum_option].uid, "parent_schema_id" : metadata_dict[mdo_name][enum_option].parent}})
+            else:
+              mdo_index.update({str(mdo_name):{"schema_id" : metadata_dict[mdo_name].uid}})
+        print(f'MDO Index {mdo_index}')
+        # Create your list of Labelbox Metadata Fields to upload
+        for gcs_metadata_field in gcs_metadata.keys():
+            labelbox_metadata.append(
+                DataRowMetadataField(
+                    schema_id=mdo_index[gcs_metadata_field]['schema_id'], 
+                    value=gcs_metadata[gcs_metadata_field]
+                )
             )
-        )
-    print(f'Labelbox Metadata {labelbox_metadata}')
+        print(f'Labelbox Metadata {labelbox_metadata}')
     
     # Update your Labelbox Data Row
     try:
