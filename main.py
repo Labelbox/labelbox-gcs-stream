@@ -53,15 +53,27 @@ def update_metadata(event, context):
     gcs_object_id = event['id']
     gcs_object_name = event['name']
     
+    # Grab Labelbox Data Row ID given the global_key
+    try: 
+        lb_data_row_id = client.get_data_row_ids_for_global_keys([gcs_object_id])['results'][0]
+        lb_global_key = gcs_object_id
+    except:
+        try:
+            lb_data_row_id = client.get_data_row_ids_for_global_keys([gcs_object_name])['results'][0]
+            lb_global_key = gcs_object_name
+        except:
+            print(f'No data row with Global Key {gcs_object_name} or {gcs_object_id} exist')
+            quit()    
+    
     # If no 'metadata', then that means metadata was deleted    
     try:
         gcs_metadata = event['metadata']
     except:
         gcs_metadata = [] 
-    lb_metadata_list = []
     
     # If there's gcs_metadata, create a `lb_metadata_list` list of Labelbox Metadata Fields to upload
     if gcs_metadata:
+        lb_metadata_list = []
         mdo = client.get_data_row_metadata_ontology()
         lb_metadata_names = [field['name'] for field in mdo._get_ontology()]        
         # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata given the field name
@@ -90,27 +102,26 @@ def update_metadata(event, context):
                     value=gcs_metadata[gcs_metadata_field]
                 )
             )
-    # Grab Labelbox Data Row ID given the global_key
-    try: 
-        lb_data_row_id = client.get_data_row_ids_for_global_keys([gcs_object_id])['results'][0]
-        lb_global_key = gcs_object_id
-    except:
-        try:
-            lb_data_row_id = client.get_data_row_ids_for_global_keys([gcs_object_name])['results'][0]
-            lb_global_key = gcs_object_name
-        except:
-            print(f'No data row with Global Key {gcs_object_name} or {gcs_object_id} exist')
-            quit()
-            
-    # Update Labelbox Metadata
-    mdo = client.get_data_row_metadata_ontology()
-    mdo.bulk_upsert([
-        DataRowMetadata(
-            data_row_id = lb_data_row_id,
-            fields = lb_metadata_list
-        )
-    ])
-    print(f'Updated Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
+        # Update Labelbox Metadata
+        mdo = client.get_data_row_metadata_ontology()
+        mdo.bulk_upsert([
+            DataRowMetadata(
+                data_row_id = lb_data_row_id,
+                fields = lb_metadata_list
+            )
+        ])
+        print(f'Updated Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
+    else:
+        # If there's no metadata it means metadata was deleted
+        # Can be customized to not delete specific metadata schema IDs
+        delete_metadata_schema_ids = [field.schema_id for field in mdo.bulk_export([data_row_id])[0].fields]
+        mdo.bulk_delete([
+            DataRowMetaData(
+                data_row_id = lb_data_row_id,
+                fields = delete_metadata_schema_ids
+            )
+        ])
+        print(f'Deleted all Metadata for Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
     
     return True
 
