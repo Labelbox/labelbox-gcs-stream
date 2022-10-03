@@ -104,13 +104,13 @@ def update_metadata(event, context):
             
     # Update Labelbox Metadata
     mdo = client.get_data_row_metadata_ontology()
-    task = mdo.bulk_upsert([
+    mdo.bulk_upsert([
         DataRowMetadata(
             data_row_id = lb_data_row_id,
             fields = lb_metadata_list
         )
     ])
-    print(f'Updated Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}\nErrors: {task.errors}')
+    print(f'Updated Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
     
     return True
 
