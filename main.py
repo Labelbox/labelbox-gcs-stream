@@ -71,10 +71,11 @@ def update_metadata(event, context):
     except:
         gcs_metadata = [] 
     
+    mdo = client.get_data_row_metadata_ontology()
+    
     # If there's gcs_metadata, create a `lb_metadata_list` list of Labelbox Metadata Fields to upload
     if gcs_metadata:
         lb_metadata_list = []
-        mdo = client.get_data_row_metadata_ontology()
         lb_metadata_names = [field['name'] for field in mdo._get_ontology()]        
         # Ensure all your metadata fields in this object are in Labelbox - if not, we'll create "string" metadata given the field name
         for gcs_metadata_field in gcs_metadata.keys():
