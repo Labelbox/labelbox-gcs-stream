@@ -123,6 +123,7 @@ def delete_data_rows(event, context):
     # Get your Labelbox Data Row ID
     try:
         # gcs_object_id is used as the global key when a data row with the object name as the global key already exists
+        print(f'Checking if data row with global_key {gcs_object_id} exists')
         lb_data_row_id = client.get_data_row_ids_for_global_keys([gcs_object_id])['results'][0]
         lb_global_key = gcs_object_id
     except:
@@ -131,8 +132,8 @@ def delete_data_rows(event, context):
         lb_global_key = gcs_object_name
         
     # Delete the Labelbox Data Row
+    print(f'Deleting Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
     lb_data_row = client.get_data_row(lb_data_row_id)
     lb_data_row.delete()
-    print(f'Deleted Data Row with ID {lb_data_row_id} and Global Key {lb_global_key}')
     
     return True
