@@ -1,9 +1,9 @@
 # Data Streaming with GCS using Google Cloud Functions
 
 ## This repo will provide with 3 deployable Cloud Functions:
-        * **stream_data_rows** - This will create a Labelbox data row every time a new asset is uploaded to the GCS bucket
-        * **update_metadata** - This will update Labelbox Metadata for existing data rows any time an object's metadata is modified in GCS
-        * **delete_data_rows** - This will delete a data row every time an asset is deleted in the GCS bucket
+ * **stream_data_rows** - This will create a Labelbox data row every time a new asset is uploaded to the GCS bucket
+ * **update_metadata** - This will update Labelbox Metadata for existing data rows any time an object's metadata is modified in GCS
+ * **delete_data_rows** - This will delete a data row every time an asset is deleted in the GCS bucket
 
 
 Prerequisites:
