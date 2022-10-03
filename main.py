@@ -31,8 +31,8 @@ def stream_data_rows(event, context):
         print(f'Creating Labelbox Dataset {lb_dataset.name} with ID {lb_dataset.uid}')
         lb_dataset = client.create_dataset(name=gcs_bucket_name, iam_integration=lb_integration)
         
-    print(f'Row Data URL {}')
     url = f"gs://{gcs_bucket_name}/{gcs_object_name}"
+    print(f'Row Data URL {url}')
 
     try:
         lb_data_row = lb_dataset.create_data_row(row_data=url, global_key=gcs_object_name)
