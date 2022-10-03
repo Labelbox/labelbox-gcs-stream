@@ -26,7 +26,7 @@ def stream_data_rows(event, context):
     if not lb_dataset:
         lb_integration = os.environ.get("labelbox_integration_name", 'DEFAULT')
         for integration in client.get_organization().get_iam_integrations():
-            if integration.name == labelbox_integration:
+            if integration.name == lb_integration:
                 lb_integration = integration
         print(f'Creating Labelbox Dataset {lb_dataset.name} with ID {lb_dataset.uid}')
         lb_dataset = client.create_dataset(name=gcs_bucket_name, iam_integration=lb_integration)
