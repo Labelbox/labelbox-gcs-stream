@@ -14,22 +14,22 @@ Prerequisites:
 3. The Google account performing these steps has access to the Google bucket and permissions to create Lambda functions
 4. The Labelbox account performing these steps has Admin-level permissions in a Labelbox organization
 
-## How to Use:
-1. Authenticate your GCloud CLI in your Terminal:
+## How to Create / Deploy Google Cloud Functions from your Command Line
+### Setup
+   * Use ```gcloud auth login``` to authenticate Google Cloud - you should expect a pop-up from Google prompting a sign in:
 ```
 gcloud auth login
 ```
-2. [Recommended] Configure gcloud config to the region your GCS Bucket is in (example region - "us-east1")
-* This can be found on the *Configuration* tab in the GCS Bucket UI
+   * [Recommended] Use ```gcloud config`` to set google project & region for your cloud function / bucket (example region - "us-east1")
+   * This can be found on the *Configuration* tab in the GCS Bucket UI
 ```
 gcloud config set project PROJECT_NAME
 gcloud config set functions/region "us-east1"
 ```
-3. Create / Redeploy your GCS function from GitHub:
-    * All cloud functions are deployed from the same main.py file, only difference is in the deployment parameters and the ```entry-point``` argument provided
-    * Running ```gcloud functions deploy FUNCTION_NAME``` will create a google cloud function of said name or update an exsting one
-
-4. Clone Repo and Define Variables:
+### Create GCS Functions from GitHub using ```gcloud functions delploy```
+    * You can deploy cloud functions from GitHub by putting your code in your main.py file and specifying the function to run with the ```--entry_point``` parameter in ```gcloud functions delploy```
+    * If no funciton with the name provided exists, ```gcloud functions delploy``` creates a Google Cloud function
+    * If a funciton with the name provided exists, ```gcloud functions delploy``` updates the existing Google Cloud function
 ```
 git clone https://github.com/Labelbox/labelbox-gcs-stream.git
 cd labelbox-gcs-stream
