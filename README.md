@@ -31,7 +31,7 @@ gcloud config set functions/region "us-east1"
 
 4. Example using this repo:
 
-Setup:
+Clone Repo and Define Variables:
 ```
 git clone https://github.com/Labelbox/labelbox-gcs-stream.git
 cd labelbox-gcs-stream
