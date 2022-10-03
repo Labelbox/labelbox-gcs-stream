@@ -28,7 +28,10 @@ def stream_data_rows(event, context):
         for integration in client.get_organization().get_iam_integrations():
             if integration.name == labelbox_integration:
                 lb_integration = integration
+        print(f'Creating Labelbox Dataset {lb_dataset.name} with ID {lb_dataset.uid}')
         lb_dataset = client.create_dataset(name=gcs_bucket_name, iam_integration=lb_integration)
+        
+    print(f'Row Data URL {}')
     url = f"gs://{gcs_bucket_name}/{gcs_object_name}"
 
     try:
