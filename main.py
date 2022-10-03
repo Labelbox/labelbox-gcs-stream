@@ -117,7 +117,7 @@ def update_metadata(event, context):
         # Can be customized to not delete specific metadata schema IDs
         delete_metadata_schema_ids = [field.schema_id for field in mdo.bulk_export([lb_data_row_id])[0].fields]
         mdo.bulk_delete([
-            DataRowMetaData(
+            DataRowMetadata(
                 data_row_id = lb_data_row_id,
                 fields = delete_metadata_schema_ids
             )
