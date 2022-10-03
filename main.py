@@ -1,6 +1,6 @@
 import labelbox
 from labelbox import Client, Dataset
-from labelbox.schema.data_row_metadata import DataRowMetadata, DataRowMetadataField, DataRowMetadataKind
+from labelbox.schema.data_row_metadata import DataRowMetadata, DataRowMetadataField, DataRowMetadataKind, DeleteDataRowMetadata
 import os
 
 # Add your API key below
@@ -115,9 +115,9 @@ def update_metadata(event, context):
     else:
         # If there's no metadata it means metadata was deleted
         # Can be customized to not delete specific metadata schema IDs
-        delete_metadata_schema_ids = [{"schema_id" : field.schema_id} for field in mdo.bulk_export([lb_data_row_id])[0].fields]
+        delete_metadata_schema_ids = [field.schema_id for field in mdo.bulk_export([lb_data_row_id])[0].fields]
         mdo.bulk_delete([
-            DataRowMetadata(
+            DeleteDataRowMetadata(
                 data_row_id = lb_data_row_id,
                 fields = delete_metadata_schema_ids
             )
