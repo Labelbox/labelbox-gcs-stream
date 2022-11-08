@@ -45,7 +45,7 @@ gcloud functions deploy stream_data_rows_function --entry-point stream_data_rows
 ```
 Deploy ```update_metadata```:
 ```
-gcloud functions deploy update_metadata --entry-point update_metadata --runtime python37 --trigger-resource=$GCS_BUCKET_NAME --trigger-event="google.storage.object.metadataUpdate" --timeout=540 --set-env-vars=labelbox_api_key=$LABELBOX_API_KEY,labelbox_integration_name=$LABELBOX_INTEGRATION_NAME
+gcloud functions deploy update_metadata_function --entry-point update_metadata --runtime python37 --trigger-resource=$GCS_BUCKET_NAME --trigger-event="google.storage.object.metadataUpdate" --timeout=540 --set-env-vars=labelbox_api_key=$LABELBOX_API_KEY,labelbox_integration_name=$LABELBOX_INTEGRATION_NAME
 ```
 Deploy ```delete_data_rows```:
 ```
