@@ -30,9 +30,9 @@ Clone this repo, defile your CLI enviornment variables
 ```
 git clone https://github.com/Labelbox/labelbox-gcs-stream.git
 cd labelbox-gcs-stream
-GCS_BUCKET_NAME="my-bucket"
-LABELBOX_API_KEY="my-api-key"
-LABELBOX_INTEGRATION_NAME="my-integration-name"
+GCS_BUCKET_NAME=my_bucket_name
+LABELBOX_API_KEY=my_api_key
+LABELBOX_INTEGRATION_NAME=my_integration_name
 ```
 ### Create GCS Functions from GitHub using ```gcloud functions delploy```
 * If no funciton with the name provided exists, ```gcloud functions delploy``` creates a Google Cloud function
